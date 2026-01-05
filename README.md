@@ -337,3 +337,31 @@ This is a bit of a pretentious wording. Just call the server endpoints.
 ## Developer hints and api
 See the files in source-doc on how to use fastMcp and Brave web search api
 The server must stop on KeyboardInterrupt (Ctrl+C) gracefully.
+
+# Usage and integration
+## LibreChat
+Put it into your librechat.yaml
+
+```#Example MCP Servers Object Structure
+mcpServers:
+  brave-web:
+    type: streamable-http # type can optionally be omitted
+    url: http://mylocalservice:8000/mcp
+    timeout: 600000  # 1 minute timeout for this server, this is the default timeout for MCP servers.
+    requirsOAuth: false
+    headers:
+      Accept: "text/event-stream, application/json"
+```
+
+## LMStudio
+put this into your mcp.json:
+
+```
+{
+  "mcpServers": {
+    "brave-webx": {
+      "url": "http://localhost:8000/mcp"
+    }
+  }
+}
+```

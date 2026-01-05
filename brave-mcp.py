@@ -20,6 +20,9 @@ from dotenv import load_dotenv
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field, validator
 
+from starlette.requests import Request
+from starlette.responses import Response
+
 # Load environment variables
 load_dotenv()
 
@@ -429,6 +432,19 @@ brave_client = BraveSearchClient(BRAVE_API_KEY, SAFE_SEARCH)
 fetch_client = WebFetchClient()
 wikipedia_client = WikipediaClient()
 
+# @mcp.custom_route("/", methods=["GET", "POST"])
+# async def default_route(request: Request) -> Response:
+#     return Response('Not found', status_code=404, headers=None, media_type=None)
+
+# @mcp.custom_route("/.well-known/*", methods=["GET"])
+# async def default_route(request: Request) -> Response:
+#     return Response('Not found', status_code=404, headers=None, media_type=None)
+
+# @mcp.custom_route("/.well-known/oauth-protected-resource/mcp", methods=["GET"])
+# async def default_route(request: Request) -> Response:
+#     return Response('Not found', status_code=404, headers=None, media_type=None)
+
+
 @mcp.tool()
 async def brave_search(query: str, max_results: int = 10) -> Dict[str, Any]:
     """
@@ -554,7 +570,8 @@ def main():
     try:
         # Run the FastMCP server on port 8000
         logger.info("Server starting on http://localhost:8000")
-        mcp.run(transport='sse', host='localhost', port=8000)
+        #mcp.http_app()
+        mcp.run(transport='streamable-http', host='localhost', port=7999)
     except KeyboardInterrupt:
         logger.info("Received KeyboardInterrupt, shutting down...")
         asyncio.run(cleanup())
